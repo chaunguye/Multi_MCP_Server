@@ -8,15 +8,22 @@ There are 3 main components:
 
 Run flow:
 - First generate the MCP Server by the command:
+
     python mcp_server_gen.py gen --tools <toolname> 
+
     (right now in toolsource we only have get_user_info and get_user_salary)
-    This will create a server with the name user_retrieve_userid (with user id is generated randomly)
+    This will create a server with the name user_retrieve_user<userid> (with user id is generated randomly)
+
   or you can add/remove tools on a exist server by:
+
     python mcp_server_gen.py mana --server <server_script> <add/remove> --tools <tool_name>
+
     EX: python mcp_server_gen.py mana --server user_retrieve_user891.py remove --tools get_user_info
 
 - After that run the mounting service, this will mount the server under a specific path under FastAPI server. For example http://example.com/mcp-server/mcp:
+
     uvicorn main:app --reload
 
 - Finally run the client, connect to the MCP Server through the FastAPI Server:
+
     uv run new_client.py
