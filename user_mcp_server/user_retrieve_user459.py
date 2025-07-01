@@ -1,8 +1,8 @@
 from fastmcp import FastMCP
 
-mcp891 = FastMCP("user_retrieve_user891")
+user_retrieve_user459 = FastMCP("user_retrieve_user459")
 
-@mcp891.tool()
+@user_retrieve_user459.tool()
 def get_user_salary(userId):
     """
     This tool is used to get user salary from user ID
@@ -11,9 +11,5 @@ def get_user_salary(userId):
     """
     return f"Get user salary of {userId} is example data"
 
-
-
 if __name__ == "__main__":
-    mcp891.run(transport="http",
-            host="127.0.0.1",
-            port=4200,)
+    user_retrieve_user459.run(transport="http")

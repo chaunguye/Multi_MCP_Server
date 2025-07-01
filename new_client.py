@@ -19,7 +19,7 @@ class SimpleChatBot:
     async def connect_to_server(self):
         """This is the function for Client to connect to Server"""
         try:
-            session = Client("http://127.0.0.1:8000/mcp-user301/mcp")
+            session = Client("http://127.0.0.1:8000/mcp-user119/mcp")
             ## This is the address of FastAPI Server http://127.0.0.1:8000 and the /mcp-user891/mcp
             ## is the mcp server of user 891 mounted to FastAPI Server
             self.session = session
@@ -44,7 +44,7 @@ async def main():
     chatbot = SimpleChatBot()
  
     await chatbot.connect_to_server() 
-    # await chatbot.test_call_tool() 
+    await chatbot.test_call_tool() 
     
 
 if __name__ == "__main__":

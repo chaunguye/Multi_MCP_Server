@@ -12,8 +12,9 @@ from google import genai
 from google.genai import types
 from fastmcp import Client
 
-api_key = os.getenv("API_KEY")
-client = genai.Client(api_key)
+load_dotenv()
+api = os.getenv("API_KEY")
+client = genai.Client(api_key=api)
 model = "gemini-2.0-flash-live-001"
 
 class ToolFormat:
@@ -27,9 +28,8 @@ class SimpleChatBot:
     def __init__(self):
         self.session = None
         self.exit_stack = AsyncExitStack() # new
-        # self.anthropic = anthropic.Anthropic()
         self.available_tools: List[ToolFormat] = []
-        self.serverURL = "http://127.0.0.1:8000" 
+        self.serverURL = "http://127.0.0.1:8000/mcp-user891/mcp" 
 
     async def connect_to_server(self):
         """This is the function for Client to connect to Server"""
@@ -41,17 +41,14 @@ class SimpleChatBot:
             # session = await self.exit_stack.enter_async_context(
             #         ClientSession(read, write)
             #     )
-            session = Client("https://127.0.0.1:8000/mcp")
-            # await session.initialize()
+            session = Client("http://127.0.0.1:8000/mcp-user301/mcp")
             self.session = session
-            async with client:
-                response_tools = await session.list_tools()
-                # print(tools)
-                
-                tools = response_tools.tools
-                print(f"\nConnected to {self.serverURL} with tools:", [t.name for t in tools])
-                self.available_tools = [ToolFormat(tool.name, tool.description, tool.inputSchema) for tool in tools]
-            # print(self.available_tools)
+            async with session:
+                response_tools = await self.session.list_tools()
+                # print(response_tools)
+                print(f"\nConnected to {self.serverURL} with tools:", [t.name for t in response_tools])
+                self.available_tools = [ToolFormat(tool.name, tool.description, tool.inputSchema) for tool in response_tools]
+                # print(self.available_tools)
         except Exception as e:
             print(f"Failed to connect to {self.serverURL}: {e}")
 
@@ -88,7 +85,7 @@ class SimpleChatBot:
                     ]
                 }
             ] 
-        print(tools)
+        # print(tools)
 
 
         config = {"response_modalities": ["TEXT"], "tools": tools}

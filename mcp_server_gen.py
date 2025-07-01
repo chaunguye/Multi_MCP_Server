@@ -6,7 +6,7 @@ import random
 
 class ToolManager:
 
-    def generate_tool_function(self,tool):
+    def generate_tool_function(self,tool, serverName):
         tool_name = tool["name"]
         description = tool["description"]
         params = tool["inputSchema"]["properties"]
@@ -18,7 +18,7 @@ class ToolManager:
         
         # Function string with indentation
         func = f"""
-@mcp.tool()
+@{serverName}.tool()
 def {tool_name}({param_list}):
     \"\"\"
     {description}
@@ -38,7 +38,8 @@ def {tool_name}({param_list}):
             tool_required = tools if tools else None
 
             userId = random.randint(1,1000)
-            server_path = f"{server_name}_user{userId}.py"
+            server_inner = f"{server_name}_user{userId}"
+            server_path = f"{server_inner}.py"
 
             mcp_server_directory = "./user_mcp_server"
 
@@ -48,21 +49,22 @@ def {tool_name}({param_list}):
 
             with open(server_path, "x") as server_file:
                 server_file.write("from fastmcp import FastMCP\n\n")
-                server_file.write(f'mcp = FastMCP("{server_name}_user{userId}")\n')
+                server_file.write(f'{server_inner} = FastMCP("{server_inner}")\n')
 
                 for tool in json_source.get("tools", []):
                     if tool_required is None or tool["name"] in tool_required:
-                        tool_func = self.generate_tool_function(tool)
+                        tool_func = self.generate_tool_function(tool, server_inner)
                         server_file.write(tool_func)
 
-                server_file.write("""
+                server_file.write(f"""
 if __name__ == "__main__":
-    mcp.run(transport="http")
+    {server_inner}.run(transport="http")
 """)
     
     def manage_tools(self,serverPath, action, tools):
         lines = None
         tool_code= None
+        userId = 123
         with open(f"./user_mcp_server/{serverPath}", "r") as server_file:
             lines = server_file.readlines()
         if lines is None:
@@ -81,9 +83,9 @@ if __name__ == "__main__":
                 for tool in json_source.get("tools", []):
                     if tool["name"] in tools:
                         if tool_code is None:
-                            tool_code = self.generate_tool_function(tool)
+                            tool_code = self.generate_tool_function(tool, serverPath[:-3])
                         else:
-                            tool_code += self.generate_tool_function(tool)
+                            tool_code += self.generate_tool_function(tool, serverPath[:-3])
             
             final_lines = lines[:index] + [line for line in tool_code] + ["\n" ]+ lines[index:]
             with open(f"./user_mcp_server/{serverPath}", "w") as server_file:
