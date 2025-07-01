@@ -1,0 +1,36 @@
+{
+    "server_name" : "user_retrieve",
+    "description" : "This is the MCP Server for retrieving user's information",
+    "tools" : [
+        {
+            "name": "get_user_info",
+            "description": "This tool is used to get user name from user ID",
+            "inputSchema": {
+                "type": "object",
+                "properties":{
+                    "userId" : {
+                    "tittle": "userId",
+                    "type": "string"
+                }
+                },
+                "require": ["userId"]
+                
+            }
+        },
+        {
+            "name": "get_user_salary",
+            "description": "This tool is used to get user salary from user ID",
+            "inputSchema": {
+                "type": "object",
+                "properties":{
+                    "userId" : {
+                    "tittle": "userId",
+                    "type": "string"
+                }
+                },
+                "require": ["userId"]
+                
+            }
+        }
+    ]
+}
