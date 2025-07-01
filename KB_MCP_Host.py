@@ -12,8 +12,8 @@ from google import genai
 from google.genai import types
 from fastmcp import Client
 
-load_dotenv()
-client = genai.Client(api_key="AIzaSyCOXvx3911PIxT3F3lbuXngGZbvyIwJL4A")
+api_key = os.getenv("API_KEY")
+client = genai.Client(api_key)
 model = "gemini-2.0-flash-live-001"
 
 class ToolFormat:
